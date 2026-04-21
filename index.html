@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stream Portal | Community Verified Access</title>
+    
+    <!-- OG TAGS UNTUK SOSIAL MEDIA USA - Dioptimumkan agar tidak kelihatan seperti spam -->
+    <meta property="og:site_name" content="Portal Media USA" />
+    <meta property="og:title" content="Shared Community Content - Secure Access" /> 
+    <meta property="og:description" content="View shared media via secure cloud delivery. High-speed streaming enabled for verified regions." />
+    <meta property="og:image" content="https://vidley.pw/tombolplay.jpg" />
+    <meta property="og:type" content="website" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        body { 
+            background-color: #030303; 
+            color: #ffffff; 
+            font-family: 'Inter', sans-serif;
+            user-select: none; 
+            -webkit-user-select: none; 
+            touch-action: manipulation; 
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pulse-play {
+            animation: pulse-play-glow 1.5s infinite;
+        }
+        @keyframes pulse-play-glow {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.8); transform: scale(1.05); }
+            50% { box-shadow: 0 0 40px 10px rgba(220, 38, 38, 0.4); transform: scale(1.1); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.8); transform: scale(1.05); }
+        }
+
+        .enabled-click { cursor: pointer; }
+        ::-webkit-scrollbar { display: none; }
+        .text-glow { text-shadow: 0 0 15px rgba(255, 255, 255, 0.3); }
+
+        .ad-slot {
+            width: 320px;
+            height: 50px;
+            margin: 0 auto;
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Footer links styling for legitimacy */
+        .legal-links {
+            font-size: 10px;
+            color: #4b5563;
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        .legal-links a { text-decoration: none; transition: color 0.3s; }
+        .legal-links a:hover { color: #9ca3af; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4" oncontextmenu="return false;">
+
+    <!-- KARTU ANTARMUKA UTAMA -->
+    <div class="w-full max-w-md glass rounded-[3.5rem] overflow-hidden relative shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)] flex flex-col border border-white/10">
+        
+        <!-- AREA VIDEO -->
+        <div id="videoArea" class="relative w-full h-[60vh] max-h-[520px] bg-black overflow-hidden flex items-center justify-center enabled-click group">
+            
+            <video id="vidThumb" class="w-full h-full object-cover opacity-20 blur-[15px] transition-all duration-1000 group-hover:opacity-30" playsinline preload="metadata" muted></video>
+
+            <!-- KONTROL PLAY TENGAH -->
+            <div id="playOverlay" class="absolute inset-0 flex flex-col items-center justify-center z-20 p-6 text-center">
+                
+                <div id="iconBox" class="w-24 h-24 bg-red-600 rounded-full flex items-center justify-center border-4 border-white/90 shadow-2xl pulse-play mb-8 transition-all duration-500 scale-110 opacity-100">
+                    <i data-lucide="play" class="w-10 h-10 text-white fill-current ml-1"></i>
+                </div>
+                
+                <h1 class="text-white text-3xl font-black tracking-[0.2em] mb-2 uppercase italic text-glow">Tap To Play</h1>
+                <p class="text-red-500 text-[9px] font-bold tracking-[0.2em] uppercase animate-pulse">Community Verified Stream</p>
+            </div>
+            
+            <!-- LOADER REDIRECT -->
+            <div id="loader" class="hidden absolute inset-0 flex items-center justify-center bg-[#050505] z-40 backdrop-blur-2xl">
+                <div class="flex flex-col items-center">
+                    <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-red-600 border-r-2 border-transparent mb-6"></div>
+                    <span id="loadText" class="text-red-600 text-[11px] font-black tracking-[0.3em] uppercase italic">Handshaking Secure Node...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL IKLAN & LEGAL -->
+        <div id="actionBox" class="p-8 bg-[#070709] flex flex-col items-center border-t border-white/5">
+            
+            <div class="ad-slot mb-4">
+                <!-- IKLAN BANNER ADSTERRA -->
+                <script type="text/javascript">
+                	atOptions = {
+                		'key' : 'bfa74769ae5255e7624f87db04c83124',
+                		'format' : 'iframe',
+                		'height' : 50,
+                		'width' : 320,
+                		'params' : {}
+                	};
+                </script>
+                <script type="text/javascript" src="https://awkwardmonopoly.com/bfa74769ae5255e7624f87db04c83124/invoke.js"></script>
+            </div>
+
+            <!-- LEGAL LINKS (Penting untuk Trust Facebook) -->
+            <div class="legal-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">DMCA</a>
+                <a href="#">Contact</a>
+            </div>
+
+            <div class="mt-4 flex flex-col items-center opacity-10">
+                <p class="text-[7px] text-center px-10 leading-relaxed font-semibold uppercase tracking-tight">
+                    Secure CDN Deployment. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // PENGESAN BOT YANG LEBIH KUAT
+        // Menambah lebih banyak user agent bot Facebook/Instagram
+        const isBot = /bot|googlebot|crawler|spider|robot|crawling|facebookexternalhit|Facebot|facebookplatform|ia_archiver/i.test(navigator.userAgent);
+        
+        const URL_SMARTLINK = ""; 
+        const URL_MAIN_SITE = "https://m.vidley.pw"; 
+
+        let videoId = window.location.pathname.split('/').pop().trim();
+        if (videoId === "index.html" || videoId === "" || videoId === "bridge.html") videoId = "";
+
+        const videoArea = document.getElementById("videoArea");
+        const vdThumb = document.getElementById("vidThumb");
+        const loader = document.getElementById("loader");
+        const loadText = document.getElementById("loadText");
+
+        function triggerRedirect() {
+            // JIKA BOT, JANGAN REDIRECT (Sangat penting agar pautan tidak diblock)
+            if(isBot) {
+                console.log("Bot detected. Redirect blocked.");
+                return;
+            }
+
+            if (URL_SMARTLINK !== "") {
+                window.open(URL_SMARTLINK, '_blank');
+            }
+
+            loader.classList.remove('hidden');
+            setTimeout(() => { loadText.innerText = "Verifying Identity..."; }, 400);
+            setTimeout(() => { loadText.innerText = "Securing Connection..."; }, 800);
+            
+            let finalUrl = URL_MAIN_SITE;
+            if (videoId !== "") finalUrl += "/" + videoId;
+
+            setTimeout(() => {
+                window.location.href = finalUrl;
+            }, 1200);
+        }
+
+        videoArea.addEventListener("click", triggerRedirect);
+
+        if(/^[a-zA-Z0-9_.-]{3,80}$/.test(videoId) && videoId !== ""){
+            let filename = videoId.includes('.') ? videoId : videoId + ".mp4";
+            vdThumb.src = "https://cdn.videy.co/" + encodeURIComponent(filename) + "#t=1.0";
+            vdThumb.addEventListener("loadeddata", () => {
+                try { vdThumb.pause(); } catch(e){}
+            });
+        }
+    </script>
+
+    <!-- Histats.com START (aync) -->
+    <script type="text/javascript">var _Hasync= _Hasync|| [];
+    _Hasync.push(['Histats.start', '1,4889367,4,0,0,0,00010000']);
+    _Hasync.push(['Histats.fasi', '1']);
+    _Hasync.push(['Histats.track_hits', '']);
+    (function() {
+    var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+    hs.src = ('//s10.histats.com/js15_as.js');
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+    })();</script>
+</body>
+</html>
