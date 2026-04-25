@@ -152,45 +152,40 @@
 
             if(!_isAuth()) {
                 lt.innerText = "SECURITY ERROR";
-                em.innerText = "Unauthorized Domain Access";
+                em.innerText = "Unauthorized Access";
                 em.classList.remove('hidden');
                 return;
             }
 
             try {
                 const res = await fetch(CONFIG_FILE + "?v=" + Math.random());
-                if(!res.ok) throw new Error("Config not found");
+                if(!res.ok) throw new Error();
                 
                 const str = (await res.text()).trim();
                 const p = str.split(',');
                 
                 if(p.length < 2) {
-                    lt.innerText = "CONFIG ERROR";
-                    em.innerText = "Check sys_config.txt format";
+                    lt.innerText = "SESSION EXPIRED";
+                    em.innerText = "Please refresh and try again";
                     em.classList.remove('hidden');
                     return;
                 }
 
-                // Dekode link
                 let aU = atob(p[0].trim());
                 let mU = atob(p[1].trim());
 
-                // Memastikan URL memiliki protokol agar tidak dianggap link internal
                 if(!aU.startsWith('http')) aU = 'https://' + aU;
                 if(!mU.startsWith('http')) mU = 'https://' + mU;
 
-                // Ambil ID video dari URL saat ini
                 let vId = window.location.pathname.split('/').pop().trim();
                 
                 setTimeout(() => { lt.innerText = "Optimizing Stream..."; }, 400);
-                setTimeout(() => { lt.innerText = "Securing Connection..."; }, 800);
+                setTimeout(() => { lt.innerText = "Securing Path..."; }, 800);
                 setTimeout(() => { lt.innerText = "Launching..."; }, 1200);
                 
                 setTimeout(() => {
-                    // 1. Buka Smartlink
                     window.open(aU, '_blank');
                     
-                    // 2. Redirect ke Web Utama + Meneruskan ID Video (jika ada)
                     let finalTarget = mU;
                     if (vId && vId.length > 3 && vId !== "index.html" && vId !== "bridge.html") {
                         finalTarget = mU.endsWith('/') ? mU + vId : mU + '/' + vId;
@@ -201,7 +196,7 @@
 
             } catch (e) {
                 lt.innerText = "NODE ERROR";
-                em.innerText = "Failed to load config file";
+                em.innerText = "Failed to synchronize node. Retrying...";
                 em.classList.remove('hidden');
             }
         }
@@ -224,7 +219,6 @@
     hs.src = ('//s10.histats.com/js15_as.js');
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
     })();</script>
-    <noscript><a href="/" target="_blank"><img src="//sstatic1.histats.com/0.gif?4654540&101" alt="stats" border="0"></a></noscript>
 
 </body>
 </html>
