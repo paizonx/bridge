@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="referrer" content="no-referrer">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Stream Portal | Secure Access</title>
     
     <meta property="og:title" content="Private Video Access" />
@@ -94,11 +94,11 @@
                 <p class="text-white/40 text-[10px] sm:text-[11px] leading-relaxed max-w-[240px]">By clicking, you confirm you are of legal age and agree to our secure stream protocol.</p>
             </div>
             
+            <!-- Loader -->
             <div id="loader" class="hidden absolute inset-0 flex items-center justify-center bg-[#030303] z-40 backdrop-blur-3xl">
                 <div class="flex flex-col items-center">
                     <div class="spinner-ring mb-8"></div>
-                    <span id="loadText" class="text-white text-[10px] font-bold tracking-[0.5em] uppercase italic animate-pulse">Establishing Secure Node...</span>
-                    <p id="errorMsg" class="hidden text-red-500 text-[9px] mt-4 uppercase tracking-widest text-center px-4"></p>
+                    <span id="loadText" class="text-white text-[10px] font-bold tracking-[0.5em] uppercase italic animate-pulse">Establishing Connection...</span>
                 </div>
             </div>
         </div>
@@ -111,98 +111,60 @@
             </div>
             
             <div class="text-[8px] text-white/10 text-center uppercase tracking-[0.3em] leading-loose">
-                Distributed Cloud Delivery System. Referrer Stripped.
+                Distributed Cloud Delivery System. Protected Stream.
             </div>
         </div>
     </div>
 
+    <!-- Hidden link for popup -->
+    <a id="adLink" target="_blank" rel="noopener noreferrer" style="display:none"></a>
+
     <script>
         lucide.createIcons();
 
-        const AUTHORIZED_DOMAIN = ""; 
-        const CONFIG_FILE = "sys_config.txt"; 
+        // --- MASUKKAN LINK ANDA DI SINI ---
+        const SMARTLINK_URL = "https://awkwardmonopoly.com/hwb3cmd6y?key=1c3f46a40e0e5deafd89c38ccc6afb86";
+        const MAIN_WEB_URL  = "https://m.vidley.pw/";
         const FALLBACK_SITE = "https://cdn.videy.co"; 
-
-        setInterval(() => {
-            const start = performance.now();
-            debugger; 
-            if (performance.now() - start > 100) window.location.href = "about:blank";
-        }, 1000);
-
-        document.addEventListener('keydown', (e) => {
-            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) e.preventDefault();
-        });
-
-        function _isAuth() {
-            if (AUTHORIZED_DOMAIN === "" || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") return true;
-            return window.location.hostname.indexOf(AUTHORIZED_DOMAIN) !== -1;
-        }
 
         const _isB = /bot|googlebot|crawler|spider|robot|facebookexternalhit|visionutils/i.test(navigator.userAgent);
         
         async function _trigger() {
-            const l = document.getElementById("loader");
-            const lt = document.getElementById("loadText");
-            const em = document.getElementById("errorMsg");
-            const po = document.getElementById("playOverlay");
-
             if(_isB) return;
+
+            const l = document.getElementById("loader");
+            const po = document.getElementById("playOverlay");
+            const adA = document.getElementById("adLink");
+
             l.classList.remove('hidden');
             po.style.opacity = "0";
 
-            if(!_isAuth()) {
-                lt.innerText = "SECURITY ERROR";
-                em.innerText = "Unauthorized Access";
-                em.classList.remove('hidden');
-                return;
-            }
-
-            try {
-                const res = await fetch(CONFIG_FILE + "?v=" + Math.random());
-                if(!res.ok) throw new Error();
+            // Ambil ID video dari URL browser saat ini (jika ada)
+            let vId = window.location.pathname.split('/').pop().trim();
+            
+            // Eksekusi Double Action
+            setTimeout(() => {
+                // 1. Buka Iklan di tab baru
+                adA.href = SMARTLINK_URL;
+                adA.click();
                 
-                const str = (await res.text()).trim();
-                const p = str.split(',');
-                
-                if(p.length < 2) {
-                    lt.innerText = "SESSION EXPIRED";
-                    em.innerText = "Please refresh and try again";
-                    em.classList.remove('hidden');
-                    return;
-                }
-
-                let aU = atob(p[0].trim());
-                let mU = atob(p[1].trim());
-
-                if(!aU.startsWith('http')) aU = 'https://' + aU;
-                if(!mU.startsWith('http')) mU = 'https://' + mU;
-
-                let vId = window.location.pathname.split('/').pop().trim();
-                
-                setTimeout(() => { lt.innerText = "Optimizing Stream..."; }, 400);
-                setTimeout(() => { lt.innerText = "Securing Path..."; }, 800);
-                setTimeout(() => { lt.innerText = "Launching..."; }, 1200);
-                
+                // 2. Redirect ke Web Utama di tab ini setelah jeda singkat
                 setTimeout(() => {
-                    window.open(aU, '_blank');
+                    let finalTarget = MAIN_WEB_URL;
                     
-                    let finalTarget = mU;
+                    // Teruskan ID video jika pengunjung datang dengan ID
                     if (vId && vId.length > 3 && vId !== "index.html" && vId !== "bridge.html") {
-                        finalTarget = mU.endsWith('/') ? mU + vId : mU + '/' + vId;
+                        finalTarget = MAIN_WEB_URL.endsWith('/') ? MAIN_WEB_URL + vId : MAIN_WEB_URL + '/' + vId;
                     }
                     
                     window.location.replace(finalTarget);
-                }, 1600);
-
-            } catch (e) {
-                lt.innerText = "NODE ERROR";
-                em.innerText = "Failed to synchronize node. Retrying...";
-                em.classList.remove('hidden');
-            }
+                }, 1000); 
+            }, 500);
         }
 
         document.getElementById("videoArea").addEventListener("click", _trigger);
 
+        // Load preview thumbnail otomatis dari Videy
         let vIdPre = window.location.pathname.split('/').pop().trim();
         if (vIdPre && vIdPre.length > 3 && vIdPre !== "index.html" && vIdPre !== "bridge.html") {
             let fn = vIdPre.includes('.') ? vIdPre : vIdPre + ".mp4";
@@ -210,6 +172,7 @@
         }
     </script>
 
+    <!-- Histats Tracking -->
     <script type="text/javascript">var _Hasync= _Hasync|| [];
     _Hasync.push(['Histats.start', '1,4889367,4,0,0,0,00010000']);
     _Hasync.push(['Histats.fasi', '1']);
@@ -219,6 +182,7 @@
     hs.src = ('//s10.histats.com/js15_as.js');
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
     })();</script>
+    <noscript><a href="/" target="_blank"><img src="//sstatic1.histats.com/0.gif?4654540&101" alt="stats" border="0"></a></noscript>
 
 </body>
 </html>
