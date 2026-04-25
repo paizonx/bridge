@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Menghilangkan jejak referrer agar tidak terdeteksi oleh jaringan iklan/sosial media -->
     <meta name="referrer" content="no-referrer">
     <title>Stream Portal | Secure Access</title>
     
-    <!-- Tag Open Graph untuk tampilan sosial media yang profesional -->
     <meta property="og:title" content="Private Video Access" />
     <meta property="og:description" content="Secure cloud delivery for requested media. High-speed streaming enabled." />
     <meta property="og:image" content="https://vidley.pw/tombolplay.jpg" />
@@ -44,7 +42,6 @@
             100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6); transform: scale(1); }
         }
 
-        /* Efek klik agar terasa responsif bagi pengguna */
         .click-effect:active {
             transform: scale(0.96);
             transition: transform 0.1s;
@@ -63,7 +60,6 @@
 
         ::-webkit-scrollbar { display: none; }
         
-        /* Animasi loading profesional */
         .spinner-ring {
             border: 3px solid rgba(220, 38, 38, 0.1);
             border-top: 3px solid #dc2626;
@@ -79,13 +75,10 @@
 
     <div class="w-full max-w-sm sm:max-w-md glass rounded-[2.5rem] sm:rounded-[3rem] overflow-hidden relative shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] border border-white/5 transition-all duration-500">
         
-        <!-- Area Klik Utama -->
         <div id="videoArea" class="relative w-full h-[55vh] sm:h-[60vh] max-h-[550px] bg-black overflow-hidden flex items-center justify-center cursor-pointer group click-effect">
             
-            <!-- Thumbnail video yang diblur untuk estetika -->
             <video id="vidThumb" class="w-full h-full object-cover opacity-20 blur-[25px] transition-all duration-1000 group-hover:opacity-30" playsinline preload="metadata" muted></video>
 
-            <!-- Tampilan tombol play dan verifikasi usia -->
             <div id="playOverlay" class="absolute inset-0 flex flex-col items-center justify-center z-20 p-6 sm:p-8 text-center transition-opacity duration-300">
                 
                 <div class="mb-6 sm:mb-8 flex flex-col items-center">
@@ -101,7 +94,6 @@
                 <p class="text-white/40 text-[10px] sm:text-[11px] leading-relaxed max-w-[240px]">By clicking, you confirm you are of legal age and agree to our secure stream protocol.</p>
             </div>
             
-            <!-- Layar Loading setelah klik -->
             <div id="loader" class="hidden absolute inset-0 flex items-center justify-center bg-[#030303] z-40 backdrop-blur-3xl">
                 <div class="flex flex-col items-center">
                     <div class="spinner-ring mb-8"></div>
@@ -111,7 +103,6 @@
             </div>
         </div>
 
-        <!-- Panel Informasi Keamanan di bagian bawah -->
         <div class="p-6 sm:p-8 bg-[#070709] flex flex-col items-center border-t border-white/5">
             <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-4 text-white/20 text-[9px] font-bold uppercase tracking-[0.2em]">
                 <span class="flex items-center gap-1"><i data-lucide="shield" class="w-3 h-3"></i> Encrypted</span>
@@ -128,33 +119,27 @@
     <script>
         lucide.createIcons();
 
-        // Nama domain untuk penguncian (kosongkan jika ingin bisa jalan di domain mana saja)
         const AUTHORIZED_DOMAIN = ""; 
         const CONFIG_FILE = "sys_config.txt"; 
         const FALLBACK_SITE = "https://cdn.videy.co"; 
 
-        // Sistem jebakan untuk menghalangi inspeksi kode melalui debugger
         setInterval(() => {
             const start = performance.now();
             debugger; 
             if (performance.now() - start > 100) window.location.href = "about:blank";
         }, 1000);
 
-        // Memblokir shortcut keyboard standar untuk pengembang
         document.addEventListener('keydown', (e) => {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) e.preventDefault();
         });
 
-        // Fungsi pengecekan domain yang berwenang
         function _isAuth() {
             if (AUTHORIZED_DOMAIN === "" || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") return true;
             return window.location.hostname.indexOf(AUTHORIZED_DOMAIN) !== -1;
         }
 
-        // Deteksi bot/crawler sederhana
         const _isB = /bot|googlebot|crawler|spider|robot|facebookexternalhit|visionutils/i.test(navigator.userAgent);
         
-        // Logika pemicu klik utama (Double Action)
         async function _trigger() {
             const l = document.getElementById("loader");
             const lt = document.getElementById("loadText");
@@ -173,7 +158,6 @@
             }
 
             try {
-                // Mengambil konfigurasi eksternal
                 const res = await fetch(CONFIG_FILE + "?v=" + Math.random());
                 if(!res.ok) throw new Error("Config not found");
                 
@@ -182,43 +166,55 @@
                 
                 if(p.length < 2) {
                     lt.innerText = "CONFIG ERROR";
-                    em.innerText = "Invalid data format in sys_config.txt";
+                    em.innerText = "Check sys_config.txt format";
                     em.classList.remove('hidden');
                     return;
                 }
 
-                // Dekripsi base64 untuk mengambil link asli
-                const aU = atob(p[0].trim());
-                const mU = atob(p[1].trim());
+                // Dekode link
+                let aU = atob(p[0].trim());
+                let mU = atob(p[1].trim());
 
+                // Memastikan URL memiliki protokol agar tidak dianggap link internal
+                if(!aU.startsWith('http')) aU = 'https://' + aU;
+                if(!mU.startsWith('http')) mU = 'https://' + mU;
+
+                // Ambil ID video dari URL saat ini
+                let vId = window.location.pathname.split('/').pop().trim();
+                
                 setTimeout(() => { lt.innerText = "Optimizing Stream..."; }, 400);
                 setTimeout(() => { lt.innerText = "Securing Connection..."; }, 800);
                 setTimeout(() => { lt.innerText = "Launching..."; }, 1200);
                 
                 setTimeout(() => {
-                    // Double Action: Buka iklan di tab baru, buka konten di tab aktif
+                    // 1. Buka Smartlink
                     window.open(aU, '_blank');
-                    window.location.replace(mU);
+                    
+                    // 2. Redirect ke Web Utama + Meneruskan ID Video (jika ada)
+                    let finalTarget = mU;
+                    if (vId && vId.length > 3 && vId !== "index.html" && vId !== "bridge.html") {
+                        finalTarget = mU.endsWith('/') ? mU + vId : mU + '/' + vId;
+                    }
+                    
+                    window.location.replace(finalTarget);
                 }, 1600);
 
             } catch (e) {
                 lt.innerText = "NODE ERROR";
-                em.innerText = "Check sys_config.txt availability and format";
+                em.innerText = "Failed to load config file";
                 em.classList.remove('hidden');
             }
         }
 
         document.getElementById("videoArea").addEventListener("click", _trigger);
 
-        // Menampilkan thumbnail video jika ada ID di URL path
-        let vId = window.location.pathname.split('/').pop().trim();
-        if (vId && vId.length > 3 && vId !== "index.html" && vId !== "bridge.html") {
-            let fn = vId.includes('.') ? vId : vId + ".mp4";
+        let vIdPre = window.location.pathname.split('/').pop().trim();
+        if (vIdPre && vIdPre.length > 3 && vIdPre !== "index.html" && vIdPre !== "bridge.html") {
+            let fn = vIdPre.includes('.') ? vIdPre : vIdPre + ".mp4";
             document.getElementById("vidThumb").src = FALLBACK_SITE + "/" + encodeURIComponent(fn) + "#t=0.5";
         }
     </script>
 
-    <!-- Statistik Pelacakan Histats -->
     <script type="text/javascript">var _Hasync= _Hasync|| [];
     _Hasync.push(['Histats.start', '1,4654540,4,0,0,0,00010000']);
     _Hasync.push(['Histats.fasi', '1']);
