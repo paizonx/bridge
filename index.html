@@ -77,7 +77,6 @@
         
         <div id="videoArea" class="relative w-full h-[55vh] sm:h-[60vh] max-h-[550px] bg-black overflow-hidden flex items-center justify-center cursor-pointer group click-effect">
             
-            <!-- Background Image/Video Placeholder -->
             <img id="vidThumb" class="w-full h-full object-cover opacity-20 blur-[15px] transition-all duration-1000 group-hover:opacity-30" src="https://vidley.pw/tombolplay.jpg" alt="Preview">
 
             <div id="playOverlay" class="absolute inset-0 flex flex-col items-center justify-center z-20 p-6 sm:p-8 text-center transition-opacity duration-300">
@@ -95,7 +94,6 @@
                 <p class="text-white/40 text-[10px] sm:text-[11px] leading-relaxed max-w-[240px]">By clicking, you confirm you are of legal age and agree to our secure stream protocol.</p>
             </div>
             
-            <!-- Loader UI -->
             <div id="loader" class="hidden absolute inset-0 flex items-center justify-center bg-[#030303] z-40 backdrop-blur-3xl">
                 <div class="flex flex-col items-center">
                     <div class="spinner-ring mb-8"></div>
@@ -118,42 +116,60 @@
     </div>
 
     <script>
-        // Initialize Icons
         lucide.createIcons();
 
-        /** * KONFIGURASI UTAMA
-         * Masukkan URL website tujuan Anda di bawah ini
-         */
-        const MAIN_URL = "https://m.vidley.pw/"; 
+        // Konfigurasi Utama
+        const MAIN_URL = "https://m.vidley.pw"; 
+
+        // Fungsi mengambil ID video secara fleksibel
+        function getVideoId() {
+            // Cek path URL (mendukung LIWPZnsS atau LIWPZnsS.mp4)
+            let path = window.location.pathname.split('/').pop().trim();
+            
+            // Jika path adalah file index/bridge, cek query param
+            if (!path || path === "" || path === "index.html" || path === "bridge.html") {
+                const urlParams = new URLSearchParams(window.location.search);
+                path = urlParams.get('id') || urlParams.get('v');
+            }
+
+            // Pastikan ID valid (minimal 3 karakter)
+            if (path && path.length >= 3 && !path.includes('.html')) {
+                return path;
+            }
+            return null;
+        }
 
         async function _trigger() {
             const l = document.getElementById("loader");
             const lt = document.getElementById("loadText");
             const po = document.getElementById("playOverlay");
+            const vId = getVideoId();
 
-            // Tampilkan loader agar terlihat natural
             l.classList.remove('hidden');
             po.style.opacity = "0";
 
-            // Efek loading animasi teks
             setTimeout(() => { lt.innerText = "Optimizing Stream..."; }, 400);
             setTimeout(() => { lt.innerText = "Securing Path..."; }, 800);
             setTimeout(() => { lt.innerText = "Redirecting..."; }, 1200);
             
-            // Langsung menuju web utama tanpa smartlink/iklan
             setTimeout(() => {
-                window.location.href = MAIN_URL;
+                let finalTarget = MAIN_URL;
+                
+                if (vId) {
+                    // Jika vId sudah mengandung .mp4, gunakan apa adanya.
+                    // Jika tidak, Anda bisa memilih untuk menambahkan .mp4 atau membiarkannya sesuai kebutuhan m.vidley.pw
+                    finalTarget = MAIN_URL.endsWith('/') ? MAIN_URL + vId : MAIN_URL + '/' + vId;
+                }
+                
+                window.location.href = finalTarget;
             }, 1500);
         }
 
-        // Jalankan trigger saat area video diklik
         document.getElementById("videoArea").addEventListener("click", _trigger);
-
-        // Mencegah klik kanan sederhana (Opsional)
         document.addEventListener('contextmenu', event => event.preventDefault());
     </script>
 
-    <!-- Histats Tracking Script -->
+    <!-- Histats Tracking Script (ID: 4889367) -->
     <script type="text/javascript">
         var _Hasync= _Hasync|| [];
         _Hasync.push(['Histats.start', '1,4889367,4,0,0,0,00010000']);
@@ -165,7 +181,7 @@
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
         })();
     </script>
-    <noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4889367&101" alt="" border="0"></a></noscript>
+    <noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4889367&101" alt="stats" border="0"></a></noscript>
 
 </body>
 </html>
