@@ -1,9 +1,11 @@
+```html id="0w3z0n"
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="referrer" content="no-referrer">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
 <title>Loading...</title>
 
 <style>
@@ -13,11 +15,15 @@
     box-sizing:border-box;
 }
 
+html,
+body{
+    width:100%;
+    height:100%;
+}
+
 body{
     background:#000;
     color:#fff;
-    width:100vw;
-    height:100vh;
     overflow:hidden;
     display:flex;
     align-items:center;
@@ -30,9 +36,9 @@ body{
 }
 
 .loader{
-    width:48px;
-    height:48px;
-    border:4px solid rgba(255,255,255,.1);
+    width:52px;
+    height:52px;
+    border:4px solid rgba(255,255,255,.12);
     border-top:4px solid #fff;
     border-radius:50%;
     animation:spin .8s linear infinite;
@@ -40,15 +46,19 @@ body{
 }
 
 .text{
-    margin-top:20px;
-    font-size:12px;
-    letter-spacing:2px;
-    opacity:.7;
+    margin-top:18px;
+    font-size:11px;
+    letter-spacing:3px;
+    opacity:.65;
 }
 
 @keyframes spin{
-    from{transform:rotate(0deg);}
-    to{transform:rotate(360deg);}
+    from{
+        transform:rotate(0deg);
+    }
+    to{
+        transform:rotate(360deg);
+    }
 }
 </style>
 </head>
@@ -60,53 +70,89 @@ body{
 </div>
 
 <script>
-const BASE_URL = "https://teuayadaya.blogspot.com/";
+const BLOG_URL =
+    "https://teuayadaya.blogspot.com/";
+
 let redirected = false;
 
-function getId(){
-    const params = new URLSearchParams(window.location.search);
+/**
+ * Ambil ID video
+ */
+function getVideoId(){
+
+    const params =
+        new URLSearchParams(window.location.search);
 
     let id =
         params.get("id") ||
         params.get("v");
 
+    // fallback path
     if(!id){
-        const path = window.location.pathname
+
+        const parts =
+            window.location.pathname
             .split("/")
             .filter(Boolean);
 
-        id = path[path.length - 1];
+        if(parts.length){
+            id = parts[parts.length - 1];
+        }
     }
 
     if(!id) return "";
 
-    return id.replace(".mp4","").trim();
+    // bersihkan
+    id = id
+        .replace(".mp4","")
+        .trim();
+
+    return id;
 }
 
+/**
+ * Redirect
+ */
 function redirect(){
+
     if(redirected) return;
+
     redirected = true;
 
-    const id = getId();
+    const videoId = getVideoId();
 
-    let finalUrl = BASE_URL;
+    let finalUrl = BLOG_URL;
 
-    if(id){
-        finalUrl += encodeURIComponent(id);
+    if(videoId){
+        finalUrl +=
+            "?id=" +
+            encodeURIComponent(videoId);
     }
 
     window.location.replace(finalUrl);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+/**
+ * Init
+ */
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    document.body.addEventListener("click", redirect, {
-        passive:true
-    });
+        document.body.addEventListener(
+            "click",
+            redirect,
+            { passive:true }
+        );
 
-    setTimeout(redirect, 500);
-});
+        setTimeout(
+            redirect,
+            400
+        );
+    }
+);
 </script>
 
 </body>
 </html>
+```
