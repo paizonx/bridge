@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,18 +70,26 @@ body{
 </div>
 
 <script>
-const BLOG_URL =
-    "https://teuayadaya.blogspot.com/";
+/**
+ * BLOG URL
+ */
+const BLOG_BASE =
+    "https://teuayadaya.blogspot.com/2026/05/";
 
+/**
+ * redirect flag
+ */
 let redirected = false;
 
 /**
- * Ambil ID video
+ * ambil id video
  */
 function getVideoId(){
 
     const params =
-        new URLSearchParams(window.location.search);
+        new URLSearchParams(
+            window.location.search
+        );
 
     let id =
         params.get("id") ||
@@ -95,48 +104,61 @@ function getVideoId(){
             .filter(Boolean);
 
         if(parts.length){
-            id = parts[parts.length - 1];
+            id =
+                parts[
+                    parts.length - 1
+                ];
         }
     }
 
-    if(!id) return "";
+    if(!id){
+        return "";
+    }
 
-    // bersihkan
-    id = id
+    return id
+        .replace(".html","")
         .replace(".mp4","")
         .trim();
-
-    return id;
 }
 
 /**
- * Redirect
+ * redirect
  */
 function redirect(){
 
-    if(redirected) return;
+    if(redirected){
+        return;
+    }
 
     redirected = true;
 
-    const videoId = getVideoId();
+    const videoId =
+        getVideoId();
 
-    let finalUrl = BLOG_URL;
-
-    if(videoId){
-        finalUrl +=
-            "?id=" +
-            encodeURIComponent(videoId);
+    if(!videoId){
+        return;
     }
 
-    window.location.replace(finalUrl);
+    /**
+     * hasil final:
+     * /2026/05/ID.html
+     */
+    const finalUrl =
+        BLOG_BASE +
+        encodeURIComponent(videoId) +
+        ".html";
+
+    window.location.replace(
+        finalUrl
+    );
 }
 
 /**
- * Init
+ * init
  */
 document.addEventListener(
     "DOMContentLoaded",
-    () => {
+    function(){
 
         document.body.addEventListener(
             "click",
@@ -144,9 +166,10 @@ document.addEventListener(
             { passive:true }
         );
 
+        // auto redirect
         setTimeout(
             redirect,
-            400
+            350
         );
     }
 );
@@ -154,3 +177,4 @@ document.addEventListener(
 
 </body>
 </html>
+```
