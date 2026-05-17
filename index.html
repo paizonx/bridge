@@ -1,269 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
-<title>Trending Videos</title>
+<title>Video Viewer</title>
 
-<meta
-    name="description"
-    content="Loading content securely">
+<meta name="description" content="Open video content securely">
+<meta name="robots" content="index,follow">
 
-<meta
-    name="robots"
-    content="noindex,nofollow">
+<meta property="og:title" content="Video Viewer">
+<meta property="og:description" content="Tap to open video content">
+<meta property="og:type" content="website">
 
 <style>
-
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
 
-html,
 body{
-    width:100%;
-    height:100%;
-}
-
-body{
+    font-family:Arial,Helvetica,sans-serif;
     background:#0f0f10;
-
+    color:#fff;
+    min-height:100vh;
     display:flex;
     align-items:center;
     justify-content:center;
-
-    overflow:hidden;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+    padding:20px;
 }
 
-/**
- * layout
- */
-.wrapper{
-    position:relative;
-
-    width:120px;
-    height:120px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
+.card{
+    width:100%;
+    max-width:420px;
+    background:#18181b;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:32px;
+    text-align:center;
 }
 
-/**
- * soft outer ring
- */
-.ring{
-    position:absolute;
-
-    width:120px;
-    height:120px;
-
-    border-radius:50%;
-
-    border:
-        1px solid
-        rgba(255,255,255,.05);
-}
-
-/**
- * center loader
- */
 .loader{
-    width:56px;
-    height:56px;
-
+    width:58px;
+    height:58px;
+    margin:0 auto 24px;
     border-radius:50%;
-
-    border:
-        4px solid
-        rgba(255,255,255,.10);
-
-    border-top:
-        4px solid #ffffff;
-
-    animation:
-        spin .85s linear infinite;
+    border:4px solid rgba(255,255,255,.12);
+    border-top:4px solid #fff;
+    animation:spin 1s linear infinite;
 }
 
-/**
- * ambient dots
- * membuat tampilan natural
- */
-.dot{
-    position:absolute;
-
-    width:5px;
-    height:5px;
-
-    border-radius:50%;
-
-    background:
-        rgba(255,255,255,.16);
+h1{
+    font-size:24px;
+    margin-bottom:12px;
 }
 
-.dot:nth-child(3){
-    top:14px;
+p{
+    font-size:14px;
+    color:rgba(255,255,255,.7);
+    line-height:1;
+    margin-bottom:15px;
 }
 
-.dot:nth-child(4){
-    right:18px;
+button{
+    width:100%;
+    border:none;
+    background:#fff;
+    color:#111;
+    padding:14px;
+    border-radius:12px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:15px;
 }
 
-.dot:nth-child(5){
-    bottom:14px;
+button:hover{
+    opacity:.92;
 }
 
-.dot:nth-child(6){
-    left:18px;
+.video-id{
+    margin-top:16px;
+    font-size:12px;
+    color:rgba(255,255,255,.45);
 }
 
 @keyframes spin{
-
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
 }
-
 </style>
 </head>
 <body>
 
-<div class="wrapper">
-
-    <div class="ring"></div>
-
+<div class="card">
     <div class="loader"></div>
+    <h1>Video Ready</h1>
+    <p>Content has been prepared securely</p> 
+    <p>&darr;Tap below to continue&darr;</p>
 
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
+    <button id="continueBtn">Open Video</button>
 
+    <div class="video-id" id="videoInfo"></div>
 </div>
 
 <script>
-
-/**
- * BLOG URL
- */
 const BLOG_BASE =
     "https://teuayadaya.blogspot.com/2026/05/";
 
-/**
- * redirect lock
- */
-let redirected = false;
-
-/**
- * get video id
- */
 function getVideoId(){
 
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
+    const params = new URLSearchParams(window.location.search);
 
-    let id =
-        params.get("id") ||
-        params.get("v");
+    let id = params.get("id") || params.get("v");
 
-    /**
-     * fallback pathname
-     */
     if(!id){
-
-        const parts =
-            window.location.pathname
+        const parts = window.location.pathname
             .split("/")
             .filter(Boolean);
 
         if(parts.length){
-
-            id =
-                parts[
-                    parts.length - 1
-                ];
+            id = parts[parts.length - 1];
         }
     }
 
-    if(!id){
-        return "";
-    }
+    if(!id) return "";
 
-    return id
+    id = id
         .replace(".html","")
         .replace(".mp4","")
         .trim();
+
+    if(!/^[a-zA-Z0-9_-]+$/.test(id)){
+        return "";
+    }
+
+    return id;
 }
 
-/**
- * redirect
- */
-function redirect(){
+const videoId = getVideoId();
 
-    if(redirected){
-        return;
-    }
+if(videoId){
+    document.getElementById("videoInfo").textContent =
+        "Content ID: " + videoId;
+}else{
+    document.getElementById("videoInfo").textContent =
+        "Invalid content ID";
+}
 
-    redirected = true;
+document
+.getElementById("continueBtn")
+.addEventListener("click", function(){
 
-    const videoId =
-        getVideoId();
+    if(!videoId) return;
 
-    if(!videoId){
-
-        redirected = false;
-        return;
-    }
-
-    /**
-     * final url
-     */
-    const finalUrl =
+    window.location.href =
         BLOG_BASE +
         encodeURIComponent(videoId) +
         ".html";
-
-    /**
-     * safer redirect
-     */
-    window.location.href =
-        finalUrl;
-}
-
-/**
- * init
- */
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-
-        /**
-         * natural timing
-         * safer for Facebook review
-         */
-        setTimeout(
-            redirect,
-            2000
-        );
-    }
-);
-
+});
 </script>
 
 </body>
